@@ -391,6 +391,6 @@ Node* self_balancing_binary_search_tree::rr_rotation(Node* node) {
     return new_root;
 }
 
-void self_balancing_binary_search_tree::print_root() {
-    std::cout << root->value << " ";
-}
+// void self_balancing_binary_search_tree::print_root() {
+//     std::cout << root->value << " ";
+// }
