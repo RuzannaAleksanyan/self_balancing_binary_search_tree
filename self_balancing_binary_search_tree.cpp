@@ -5,8 +5,7 @@
 
 // Ctor
 self_balancing_binary_search_tree::self_balancing_binary_search_tree() 
-            : root{nullptr}
-{
+            : root{nullptr} {
     balancing_tree(root);
 }
 
@@ -17,14 +16,16 @@ self_balancing_binary_search_tree::self_balancing_binary_search_tree(int val) {
 }
 
 // Copy Ctor
-self_balancing_binary_search_tree::self_balancing_binary_search_tree(const self_balancing_binary_search_tree& other) {
+self_balancing_binary_search_tree::self_balancing_binary_search_tree(
+            const self_balancing_binary_search_tree& other) {
     root = copy_tree(other.root);
 }
 
 // Copy assignment operator
-self_balancing_binary_search_tree& self_balancing_binary_search_tree::operator=(const self_balancing_binary_search_tree& other) {
+self_balancing_binary_search_tree& self_balancing_binary_search_tree::operator=(
+            const self_balancing_binary_search_tree& other) {
     if(this != &other) {
-        destroy_tree(other.root);
+        destroy_tree(this->root);
 
         root = copy_tree(other.root);
     }
@@ -33,16 +34,18 @@ self_balancing_binary_search_tree& self_balancing_binary_search_tree::operator=(
 }
 
 // Move Ctor
-self_balancing_binary_search_tree::self_balancing_binary_search_tree(self_balancing_binary_search_tree&& other) {
-    destroy_tree(root);
+self_balancing_binary_search_tree::self_balancing_binary_search_tree(
+            self_balancing_binary_search_tree&& other) {
+    destroy_tree(this->root);
     root = other.root;
     other.root = nullptr;
 }
 
 // Move assignment operator
-self_balancing_binary_search_tree& self_balancing_binary_search_tree::operator=(self_balancing_binary_search_tree&& other) {
+self_balancing_binary_search_tree& self_balancing_binary_search_tree::operator=(
+            self_balancing_binary_search_tree&& other) {
     if(this != &other) {
-        destroy_tree(root);
+        destroy_tree(this->root);
         root = other.root;
         other.root = nullptr;
     }
@@ -159,7 +162,7 @@ void self_balancing_binary_search_tree::insert(int val) {
 
 Node* self_balancing_binary_search_tree::delete_node(Node* node, int key) {
     if (node == nullptr) {
-        return node; // Node not found
+        return node; 
     }
 
     if (key < node->value) {
@@ -167,49 +170,38 @@ Node* self_balancing_binary_search_tree::delete_node(Node* node, int key) {
     } else if (key > node->value) {
         node->right = delete_node(node->right, key);
     } else {
-        // Node with the key found, perform deletion
         if (node->left == nullptr || node->right == nullptr) {
             Node* temp = (node->left) ? node->left : node->right;
 
-            // If the node has one child or no child
             if (temp == nullptr) {
                 temp = node;
                 node = nullptr;
             } else {
-                // Node has one child, so copy the child's data to this node
                 node->value = temp->value;
                 node->left = node->right = nullptr;
             }
 
             delete temp;
         } else {
-            // Node with two children: Get the in-order successor (smallest in the right subtree)
             Node* successor = get_min(node->right);
 
-            // Copy the in-order successor's data to this node
             node->value = successor->value;
 
-            // Delete the in-order successor
             node->right = delete_node(node->right, successor->value);
         }
     }
 
-    // If the tree is empty after deletion, return
     if (node == nullptr) {
         return node;
     }
 
-    // Rebalance the tree
     int balanceFactor = get_balancing_factor(node);
 
     // Left-Heavy
     if (balanceFactor > 1) {
         if (get_balancing_factor(node->left) >= 0) {
-            // Left-Left imbalance, perform a right rotation (RR)
             node = rr_rotation(node);
         } else {
-            // Left-Right imbalance, perform a left rotation on the left child
-            // followed by a right rotation on the current node (LR)
             node->left = ll_rotation(node->left);
             node = rr_rotation(node);
         }
@@ -218,11 +210,8 @@ Node* self_balancing_binary_search_tree::delete_node(Node* node, int key) {
     // Right-Heavy
     if (balanceFactor < -1) {
         if (get_balancing_factor(node->right) <= 0) {
-            // Right-Right imbalance, perform a left rotation (LL)
             node = ll_rotation(node);
         } else {
-            // Right-Left imbalance, perform a right rotation on the right child
-            // followed by a left rotation on the current node (RL)
             node->right = rr_rotation(node->right);
             node = ll_rotation(node);
         }
@@ -330,38 +319,25 @@ bool self_balancing_binary_search_tree::is_balanced(Node* node) {
 
 void self_balancing_binary_search_tree::balancing_tree(Node* &node) {
     if (node) {
-        // First, balance the left subtree
         balancing_tree(node->left);
 
-        // Then, balance the right subtree
         balancing_tree(node->right);
 
-        // Calculate the balancing factor for the current node
         int balanceFactor = get_balancing_factor(node);
 
-        // If the balance factor is greater than 1, it means the tree is left-heavy
         if (balanceFactor > 1) {
-            // Determine if it's a left-left or left-right imbalance
             if (get_balancing_factor(node->left) >= 0) {
-                // Left-Left imbalance, perform a right rotation (RR)
                 node = rr_rotation(node);
             } else {
-                // Left-Right imbalance, perform a left rotation on the left child
-                // followed by a right rotation on the current node (LR)
                 node->left = ll_rotation(node->left);
                 node = rr_rotation(node);
             }
         }
 
-        // If the balance factor is less than -1, it means the tree is right-heavy
         if (balanceFactor < -1) {
-            // Determine if it's a right-right or right-left imbalance
             if (get_balancing_factor(node->right) <= 0) {
-                // Right-Right imbalance, perform a left rotation (LL)
                 node = ll_rotation(node);
             } else {
-                // Right-Left imbalance, perform a right rotation on the right child
-                // followed by a left rotation on the current node (RL)
                 node->right = rr_rotation(node->right);
                 node = ll_rotation(node);
             }
@@ -390,7 +366,3 @@ Node* self_balancing_binary_search_tree::rr_rotation(Node* node) {
     new_root->right = node;
     return new_root;
 }
-
-// void self_balancing_binary_search_tree::print_root() {
-//     std::cout << root->value << " ";
-// }
