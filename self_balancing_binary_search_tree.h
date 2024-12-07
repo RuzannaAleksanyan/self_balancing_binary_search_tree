@@ -49,6 +49,9 @@ public:
     void level_order() const;
     bool balancing_factor();
     int get_balancing_factor(Node* node);
+
+    void bfs();
+    void dfs();
     // void print_root();  
 };
 

@@ -301,7 +301,7 @@ int self_balancing_binary_search_tree::balancing_factor(Node* node) {
 }
 
 bool self_balancing_binary_search_tree::balancing_factor() {
-    return is_balanced(root);
+    return balancing_factor(root);
 }
 
 bool self_balancing_binary_search_tree::is_balanced(Node* node) {
@@ -365,4 +365,12 @@ Node* self_balancing_binary_search_tree::rr_rotation(Node* node) {
     node->left = new_root->right;
     new_root->right = node;
     return new_root;
+}
+
+void self_balancing_binary_search_tree::bfs() {
+    level_order();
+}
+
+void self_balancing_binary_search_tree::dfs() {
+    preorder();
 }

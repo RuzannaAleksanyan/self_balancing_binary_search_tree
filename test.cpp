@@ -31,6 +31,14 @@ int main() {
     std::cout << "Level-order traversal: ";
     avl.level_order();
     std::cout << std::endl;
+
+    std::cout << "BFS traversal: ";
+    avl.bfs();
+    std::cout << std::endl;
+
+    std::cout << "DFS traversal: ";
+    avl.dfs();
+    std::cout << std::endl;
     
     // Test get_balancing_factor
     int balance_factor = avl.get_balancing_factor(avl.get_root());
